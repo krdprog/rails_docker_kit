@@ -1,0 +1,25 @@
+services:
+  web:
+    build: .
+    container_name: my_rails
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    ports:
+      - "3033:3000"
+    depends_on:
+      - db
+  db:
+    image: postgres:15.2
+    container_name: my_rails_db
+    restart: unless-stopped
+    volumes:
+      - ./db_dump/:/docker-entrypoint-initdb.d
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: rails_development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: qwerty123
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - 5438:5432
